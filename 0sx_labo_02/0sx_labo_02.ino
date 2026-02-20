@@ -62,11 +62,13 @@ void ledManagement(int state){
 void buttonManagement(int state){
  int currentButtonState = digitalRead(BUTTON_PIN);
 
-  if (currentButtonState != lastButtonState) lastChange = millis();
+  if(currentButtonState != lastButtonState) lastChange = millis();
 
-  if ((millis() - lastChange) > BOUNCE_DELAY && currentButtonState != buttonState) { 
+  if((millis() - lastChange) > BOUNCE_DELAY && currentButtonState != buttonState){ 
     buttonState = currentButtonState;
-    printManagement(state);
+    if(currentButtonState == 0){
+      printManagement(state);
+    }
   }
 
   lastButtonState = currentButtonState;
