@@ -25,8 +25,8 @@ const float CO_2 = 2.34125e-04;
 const float CO_3 = 8.76741e-08;
 
 const float MAX_ALT = 200.0;
-const float TEMP_COOL_ON = 35.0;
-const float TEMP_COOL_OFF = 30.0;
+const float TEMP_COOL_ON = 20.0;
+const float TEMP_COOL_OFF = 18.0;
 
 enum LcdScreen {
   PAGE_JOYSTICK,
@@ -103,7 +103,7 @@ void displayStartup() {
   String id = String(STUDENT_ID);
   String masked = "";
 
-  for(int i = 0; i < (long)id.length() - 2; i++) masked += "*";
+  for(int i = 0; i < id.length() - 2; i++) masked += "*";
   masked += id.substring(id.length() - 2);
 
   lcd.setCursor(0, 1);
@@ -182,25 +182,25 @@ void lcdPageJoystick() {
   else if(rawY > JOY_CENTER + JOY_DEADZONE) direction = "DOWN";
   else direction = "";
 
-  lcdPrint("ALT:" + String((int)altitude) + "m " + direction, 0);
+  lcdPrint("ALT:" + String(altitude) + "m " + direction, 0);
   lcdPrint("DIR:" + String(angleDir) + "(" + String(angleDir < 0 ? "G" : "D") + ")", 1);
 }
 
 void lcdPageCoolingSystem() {
-  lcdPrint(String(temperature, 1) + " C", 0);
+  lcdPrint(String(temperature) + " C", 0);
   lcdPrint("COOL: " + String(systemOn ? "ON" : "OFF"), 1);
 }
 
 void lcdPrint(String text, int row) {
-  while((int)text.length() < 16) text += " ";
+  while(text.length() < 16) text += " ";
   lcd.setCursor(0, row);
-  lcd.print(text.substring(0, 16));
+  lcd.print(text);
 }
 
 void serialManagement() {
   if(millis() - lastSerial < SERIAL_INTERVAL) return;
   lastSerial = millis();
 
-  Serial.print("etd:" + String((long)STUDENT_ID) + ",x:" + String((int)rawX) + ",y:" + String((int)rawY) + ",sys:");
+  Serial.print("etd:" + String(STUDENT_ID) + ",x:" + String(rawX) + ",y:" + String(rawY) + ",sys:");
   Serial.println(systemOn ? 1 : 0);
 }
